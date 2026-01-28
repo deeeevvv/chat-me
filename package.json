@@ -1,0 +1,12 @@
+{
+  "dependencies": {
+    "better-sqlite3": "^12.4.1",
+    "connect-mongo": "^5.1.0",
+    "connect-sqlite3": "^0.9.16",
+    "dotenv": "^17.2.3",
+    "express-session": "^1.18.2",
+    "mongoose": "^8.19.3",
+    "passport": "^0.7.0",
+    "passport-google-oauth20": "^2.0.0"
+  }
+}

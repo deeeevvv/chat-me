@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Chat Me : Ask anything</title>
+  <link rel="shortcut icon" href="logo.jpg" type="image/x-icon">
+  <link rel="stylesheet" href="chat.css" />
+  <script src="chat.js" defer></script>
+
+  <style>
+    /* Modal Overlay */
+    .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(4px);
+        z-index: 10000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+    }
+
+    .modal-overlay.active {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    /* Modal Box */
+    .modal-box {
+        background: #1e1e1e;
+        border: 1px solid #333;
+        padding: 25px;
+        border-radius: 12px;
+        width: 300px;
+        text-align: center;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        transform: scale(0.9);
+        transition: transform 0.3s ease;
+        font-family: sans-serif;
+        color: white;
+    }
+
+    .modal-overlay.active .modal-box {
+        transform: scale(1);
+    }
+
+    .modal-title {
+        font-size: 1.2rem;
+        margin-bottom: 10px;
+        font-weight: bold;
+    }
+
+    .modal-desc {
+        font-size: 0.9rem;
+        color: #aaa;
+        margin-bottom: 20px;
+    }
+
+    .modal-actions {
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+    }
+
+    .modal-btn {
+        padding: 10px 0;
+        width: 100%;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: 0.2s;
+    }
+
+    .btn-cancel {
+        background: #333;
+        color: #fff;
+    }
+    .btn-cancel:hover { background: #444; }
+
+    .btn-confirm {
+        background: #ff4757;
+        color: white;
+    }
+    .btn-confirm:hover { background: #e84118; }
+  </style>
+</head>
+<body>
+
+  <div class="modal-overlay" id="warningModal">
+    <div class="modal-box">
+        <div class="modal-title" id="modalTitle">Are you sure?</div>
+        <div class="modal-desc" id="modalDesc">This action cannot be undone.</div>
+        <div class="modal-actions">
+            <button class="modal-btn btn-cancel" id="cancelBtn">Cancel</button>
+            <button class="modal-btn btn-confirm" id="confirmBtn">Yes, Delete</button>
+        </div>
+    </div>
+  </div>
+
+  <header class="topbar">
+    <div class="user-info">
+      <span id="welcome">   Hi, Guest</span>
+    </div>
+    <button id="logoutBtn" class="logout-btn">Logout</button>
+  </header>
+  <div class="branding">
+    <h1>Chat Me 2.0   </h1>
+    <p>A NEW WAY TO TALK</p>     
+    </div>
+
+  <main class="container">
+    <header class="header">
+      <h2 class="title">Chat Me 2.0</h2>
+      <div class="an"><p class="text">Ask. Chat. Explore.</p></div>
+      <div class="header-buttons">
+        <button id="clearChat">Clear</button>
+        <button id="toggleHistory">History</button>
+      </div>
+    </header>
+
+    <div class="history" id="history" hidden>
+      <h4>Chat History</h4>
+      <button id="clearHistory">Clear History</button>
+      <ul id="historyList"></ul>
+    </div>
+    <div class="content" id="content">
+      <section class="answer-section">
+        Hi there! 🙋‍♂️ I’m Chat Me — your friendly AI assistant. Let’s get started with your thoughts! 😊
+      </section>
+    </div>
+
+    <footer1 class="chat-form">
+      <input class="chat-input" id="chatInput" type="text" placeholder="Share your thoughts..." autocomplete="off">
+      <button class="send-button" id="sendButton">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill:white;"><path d="m21.426 11.095-17-8A1 1 0 0 0 3.03 4.242l1.212 4.849L12 12l-7.758 2.909-1.212 4.849a.998.998 0 0 0 1.396 1.147l17-8a1 1 0 0 0 0-1.81z"></path></svg>
+      </button>
+    </footer1>
+  </main>
+</body>
+<footer>@2025 Chat Me. All rights reserved</footer>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const modal = document.getElementById('warningModal');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalDesc = document.getElementById('modalDesc');
+        const confirmBtn = document.getElementById('confirmBtn');
+        const cancelBtn = document.getElementById('cancelBtn');
+        let pendingAction = null;
+
+        // Open Modal Function
+        function openWarning(action) {
+            pendingAction = action;
+            modal.classList.add('active');
+            
+            if (action === 'chat') {
+                modalTitle.innerText = "Clear Chat?";
+                modalDesc.innerText = "This will remove all current messages.";
+            } else {
+                modalTitle.innerText = "Clear History?";
+                modalDesc.innerText = "This will permanently delete your saved history.";
+            }
+        }
+
+        // Close Modal Function
+        function closeWarning() {
+            modal.classList.remove('active');
+            pendingAction = null;
+        }
+
+        // 1. Intercept "Clear" Chat Button
+        document.getElementById('clearChat').addEventListener('click', (e) => {
+            // We stop the immediate action so we can show the popup first
+            e.stopImmediatePropagation(); 
+            e.preventDefault(); 
+            openWarning('chat');
+        });
+
+        // 2. Intercept "Clear History" Button
+        document.getElementById('clearHistory').addEventListener('click', (e) => {
+            e.stopImmediatePropagation();
+            e.preventDefault();
+            openWarning('history');
+        });
+
+        // 3. Confirm Logic
+        confirmBtn.addEventListener('click', () => {
+            if (pendingAction === 'chat') {
+                // VISUAL CLEAR ONLY. 
+                // If you use chat.js to save chats, you might need to add your clear logic here.
+                document.getElementById('content').innerHTML = '<section class="answer-section">Chat cleared.</section>';
+            } else if (pendingAction === 'history') {
+                // VISUAL CLEAR ONLY.
+                document.getElementById('historyList').innerHTML = '';
+            }
+            closeWarning();
+        });
+
+        // 4. Cancel Logic
+        cancelBtn.addEventListener('click', closeWarning);
+
+        // NOTE: I removed the "toggleHistory" logic from here.
+        // It will now rely entirely on your existing 'chat.js' to open/close the history panel.
+    });
+</script>
+</html>

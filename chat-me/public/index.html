@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Me 2.0: Ask anything</title>
+    <link rel="stylesheet" href="style.css">
+    <meta name="theme-color" content="#1f1f1f">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="logo.jpg">
+    <link rel="icon" href="logo.jpg" type="image/x-icon">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;700;900&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- CORE LAYOUT --- */
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #000; font-family: 'Inter', sans-serif; }
+        
+        #canvas-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: radial-gradient(circle at center, #1a1a1a 0%, #000000 100%);
+        }
+
+        .login-container {
+            position: relative;
+            z-index: 10;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* =========================================
+           SHARED ANIMATIONS
+           ========================================= */
+        @keyframes brandEntranceLeft {
+            to { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes mobileSlideDown {
+            to { opacity: 1; top: 30px; } /* Slightly lower for better visibility */
+        }
+        @keyframes tabletSlideDown {
+            to { opacity: 1; top: 50px; } 
+        }
+        @keyframes subtitleReveal {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* =========================================
+           1. DESKTOP BRANDING (>1024px)
+           Clean Text, Top-Left
+           ========================================= */
+        .branding-desktop {
+            display: block;
+            position: fixed;
+            top: 40px;
+            left: 40px;
+            z-index: 100;
+            text-align: center;
+            background: transparent; 
+            
+            opacity: 0;
+            transform: translateX(-30px);
+            animation: brandEntranceLeft 1s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+            cursor: default;
+        }
+
+        .branding-desktop h1 {
+            margin: 0;
+            font-size: 3rem; 
+            font-weight: 900;
+            letter-spacing: -1px;
+            color: #fff;
+            text-shadow: 0 4px 15px rgba(0,0,0,0.8); 
+        }
+
+        .branding-desktop p {
+            margin: 5px 0 0 0;
+            font-size: 0.9rem;
+            color: #a5f3fc; 
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            font-weight: 700;
+            text-shadow: 0 2px 10px rgba(0,0,0,1);
+            opacity: 0;
+            transform: translateY(10px);
+            animation: subtitleReveal 0.8s ease-out 0.6s forwards;
+        }
+
+        /* =========================================
+           2. TABLET BRANDING (769px - 1024px)
+           Glass Box, Top-Left -- UPDATED SIZE: BIGGER
+           ========================================= */
+        .branding-tablet {
+            display: none; 
+            position: fixed;
+            left: 50px; /* More margin */
+            top: -100px; 
+            z-index: 100;
+
+            /* Glassmorphism */
+            background: rgba(35, 30, 30, 0.1);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 0.1px solid rgba(167, 167, 167, 0.37);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+            border-radius: 16px; /* Rounder corners */
+            
+            /* INCREASED SIZE & PADDING */
+            padding: 20px 35px;
+            text-align: left;
+            
+            opacity: 0;
+            animation: tabletSlideDown 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards 0.3s;
+        }
+
+        .branding-tablet h1 {
+            margin: 0;
+            font-size: 2.4rem; /* Increased from 1.8rem */
+            font-weight: 800;
+            color: #fff;
+            letter-spacing: -0.5px;
+        }
+
+        .branding-tablet p {
+            margin: 4px 0 0 0;
+            font-size: 0.95rem; /* Increased from 0.75rem */
+            color: #a5f3fc;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 700;
+            opacity: 0.9;
+        }
+
+        /* =========================================
+           3. MOBILE BRANDING (<768px)
+           Glass Box, Top-Center -- UPDATED SIZE: BIGGER
+           ========================================= */
+        .branding-mobile {
+            display: none; 
+            position: fixed;
+            left: 50%;
+            transform: translateX(-50%);
+            top: -100px; 
+            z-index: 100;
+            
+            /* Glassmorphism */
+            background: rgba(35, 30, 30, 0.1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.4);
+            border-radius: 14px;
+             border: 0.1px solid rgba(167, 167, 167, 0.37);
+            
+            /* INCREASED SIZE & PADDING */
+            padding: 15px 30px;
+            text-align: center;
+            width: max-content; /* Ensure box fits content */
+            max-width: 90%;
+            
+            opacity: 0;
+            animation: mobileSlideDown 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards 0.3s;
+        }
+
+        .branding-mobile h1 {
+            margin: 0;
+            font-size: 1.8rem; /* Increased from 1.5rem */
+            font-weight: 800;
+            color: #fff;
+            letter-spacing: -0.5px;
+        }
+
+        .branding-mobile p {
+            margin: 4px 0 0 0;
+            font-size: 0.75rem; /* Increased slightly */
+            color: #a5f3fc;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-weight: 700;
+            opacity: 0.9;
+        }
+
+        /* =========================================
+           MEDIA QUERY LOGIC
+           ========================================= */
+        
+        /* TABLET RANGE (769px to 1024px) */
+        @media screen and (max-width: 1024px) {
+            .branding-desktop { display: none !important; }
+            .branding-tablet  { display: block !important; }
+            .branding-mobile  { display: none !important; }
+        }
+
+        /* MOBILE RANGE (Below 768px) */
+        @media screen and (max-width: 768px) {
+            .branding-desktop { display: none !important; }
+            .branding-tablet  { display: none !important; }
+            .branding-mobile  { display: block !important; }
+        }
+
+        .login-panel {
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+    </style>
+    <script src="login.js" defer></script>
+</head>
+<body class="login-body">
+
+    <div id="canvas-container"></div>
+
+    <div class="branding-desktop">
+        <h1>Chat Me 2.0</h1>
+        <p>A New Way To Talk</p>
+    </div>
+
+    <div class="branding-tablet">
+        <h1>Chat Me 2.0</h1>
+        <p>A New Way To Talk</p>
+    </div>
+
+    <div class="branding-mobile">
+        <h1>Chat Me 2.0</h1>
+        <p>A New Way To Talk</p>
+    </div>
+
+    <div class="login-container">
+        <div class="login-panel glass">
+            <h2>Welcome</h2>
+            <p>Choose how you’d like to continue</p>
+            
+            <button class="login-btn google" id="googleLogin">
+                <img src="google.svg" alt="Google logo"> Continue with Google
+            </button>
+
+            <form id="guestForm">
+                <input type="text" name="guestName" id="guestName" placeholder="Enter your name" required>
+                <button class="login-btn guest" type="submit">
+                    <img src="guest.svg" alt="Guest logo"> Continue as Guest
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/three@0.152.0/build/three.min.js"></script>
+
+    <script>
+        let scene, camera, renderer, particles;
+        const count = 45000; 
+        let positions, targetPositions, colors;
+        let currentShapeIndex = 0;
+        
+        const shapes = ['sphere', 'torus', 'cone', 'galaxy', 'cube', 'helix', 'wave'];
+
+        function initThree() {
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.z = 45; 
+
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(window.devicePixelRatio);
+            document.getElementById('canvas-container').appendChild(renderer.domElement);
+
+            const geo = new THREE.BufferGeometry();
+            positions = new Float32Array(count * 3);
+            targetPositions = new Float32Array(count * 3);
+            colors = new Float32Array(count * 3);
+
+            calculateShape('sphere'); 
+            
+            for (let i = 0; i < count * 3; i++) {
+                positions[i] = targetPositions[i];
+            }
+
+            geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            geo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+            const mat = new THREE.PointsMaterial({ 
+                size: 0.1, 
+                vertexColors: true, 
+                transparent: true, 
+                opacity: 0.9, 
+                blending: THREE.AdditiveBlending 
+            });
+            
+            particles = new THREE.Points(geo, mat);
+            scene.add(particles);
+
+            setInterval(() => {
+                currentShapeIndex = (currentShapeIndex + 1) % shapes.length;
+                calculateShape(shapes[currentShapeIndex]);
+                updateColors();
+            }, 4000);
+            
+            updateColors();
+        }
+
+        function calculateShape(type) {
+            for (let i = 0; i < count; i++) {
+                let p;
+                if (type === 'sphere') {
+                    const r = 25; 
+                    const phi = Math.acos(-1 + (2 * i) / count);
+                    const theta = Math.sqrt(count * Math.PI) * phi;
+                    p = { x: r * Math.sin(phi) * Math.cos(theta), y: r * Math.sin(phi) * Math.sin(theta), z: r * Math.cos(phi) };
+                }
+                else if (type === 'torus') {
+                    const R = 22; const r = 8;
+                    const u = Math.random() * Math.PI * 2;
+                    const v = Math.random() * Math.PI * 2;
+                    p = { x: (R + r * Math.cos(v)) * Math.cos(u), y: (R + r * Math.cos(v)) * Math.sin(u), z: r * Math.sin(v) };
+                }
+                else if (type === 'cone') {
+                    const h = 40; const y = Math.random() * h; const r = (y / h) * 20; const theta = Math.random() * Math.PI * 2;
+                    p = { x: r * Math.cos(theta), y: y - h/2, z: r * Math.sin(theta) };
+                }
+                else if (type === 'galaxy') {
+                    const arms = 5; const spin = i / count * arms * Math.PI * 2; const r = (i / count) * 35;
+                    p = { x: r * Math.cos(spin + Math.random()), y: (Math.random() - 0.5) * 5, z: r * Math.sin(spin + Math.random()) };
+                }
+                else if (type === 'cube') {
+                    const size = 35;
+                    p = { x: (Math.random() - 0.5) * size, y: (Math.random() - 0.5) * size, z: (Math.random() - 0.5) * size };
+                }
+                else if (type === 'helix') {
+                    const t = (i / count) * Math.PI * 20; const r = 15;
+                    p = { x: r * Math.cos(t), y: (i/count * 60) - 30, z: r * Math.sin(t) };
+                }
+                else if (type === 'wave') {
+                    const size = 50; const x = (Math.random() - 0.5) * size; const z = (Math.random() - 0.5) * size;
+                    const y = Math.sin(x * 0.2) * Math.cos(z * 0.2) * 8;
+                    p = { x, y, z };
+                }
+                targetPositions[i*3] = p.x + (Math.random()-0.5)*0.5;
+                targetPositions[i*3+1] = p.y + (Math.random()-0.5)*0.5;
+                targetPositions[i*3+2] = p.z + (Math.random()-0.5)*0.5;
+            }
+        }
+
+        function updateColors() {
+            const colAttr = particles.geometry.attributes.color;
+            const rBase = Math.random(); const gBase = Math.random(); const bBase = Math.random();
+            for (let i = 0; i < count; i++) {
+                const ratio = i / count;
+                colAttr.array[i*3] = rBase + ratio * 0.3;     
+                colAttr.array[i*3+1] = gBase + (1-ratio)*0.3; 
+                colAttr.array[i*3+2] = bBase + ratio * 0.3;   
+            }
+            colAttr.needsUpdate = true;
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            const pos = particles.geometry.attributes.position;
+            for (let i = 0; i < count * 3; i++) {
+                pos.array[i] += (targetPositions[i] - pos.array[i]) * 0.05;
+            }
+            pos.needsUpdate = true;
+            particles.rotation.y += 0.002; particles.rotation.x += 0.001;
+            renderer.render(scene, camera);
+        }
+
+        initThree();
+        animate();
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+    </script>
+    <script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw.js')
+        .then((reg) => console.log('Service Worker registered', reg))
+        .catch((err) => console.log('Service Worker failed', err));
+    });
+  }
+</script>
+</body>
+</html>

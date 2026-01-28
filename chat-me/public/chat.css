@@ -1,0 +1,454 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+:root{
+  --light-primary-color: #040404cd;
+  --secondary-color: #6889b8;
+  --accent-color: #4F6BFE; /* Added for the glow effects */
+}
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: url('bg.jpg') center/cover no-repeat;
+  font-family: 'Poppins', sans-serif;
+  color: #fff;
+  display: flex;
+  backdrop-filter: blur(0.5px);
+  flex-direction: column;
+  align-items: center;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* --- Top Bar --- */
+.topbar {
+  width: 100%;
+  background: rgba(10, 10, 20, 0.75);
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.6rem 1.2rem;
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+
+.user-pic {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 2px solid white;
+  object-fit: cover;
+}
+
+.logout-btn {
+  background: linear-gradient(135deg, #ff4444, #e60000);
+  border: none;
+  color: white;
+  padding: 0.45rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.logout-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 10px rgba(255, 68, 68, 0.6);
+}
+
+.branding {
+  position: absolute;
+  top:9%;
+  left: 1.5%;
+  display: inline-block;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  color: white;
+  text-shadow: 0 0 10px rgba(0, 0, 0, 0.336);
+}
+
+.branding h1 {
+  font-size: 2.8rem;
+  justify-content: center;
+  font-weight: 750;
+    letter-spacing: 1px;
+    font-family: 'Inter', sans-serif;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    animation: typing1 3s steps(30);
+     text-shadow: 0px 0px 10px rgba(255, 255, 255, 0.4), 0 0 20px rgba(255,255,255,0.20);
+}
+@keyframes typing1
+{
+    from {width:0}}
+.branding p {
+  font-size: 0.9rem;
+  justify-content: center;
+  font-weight: 750;
+    letter-spacing: 1px;
+    font-family: 'Inter', sans-serif;
+    width: 100%;
+    color: #a5f3fc;
+    white-space: nowrap;
+    opacity: 0;
+    overflow: hidden;
+    animation: fadeIn 3.5s ease forwards;
+        animation-delay: 4s;
+     text-shadow: 0px 0px 10px rgba(255, 255, 255, 0.4), 0 0 20px rgba(255,255,255,0.20);
+}
+@keyframes fadeIn
+{
+    0% {transform: translateY(20px);opacity: 0;}100%{transform: translateY(0);opacity: 1;}}
+/* hide in small screens */
+@media (max-width: 1500px) {
+  .branding {
+    display: none;
+  }
+}
+
+/* --- Chat Container --- */
+.container {
+  background: rgba(5, 4, 4, 0.12);
+  backdrop-filter: blur(15px);
+  border-radius: 14px;
+  width: 95%;
+  max-width: 800px;
+  height: 85vh;
+  display: flex;
+  flex-direction: column;
+  margin-top: 0.8rem;
+  color: white;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.35);
+  overflow: hidden;
+  border: 0.2px solid #dddddd;
+  background-image: url("img.jpg");
+  background-size: cover;
+  background-position: center;
+}
+
+/* --- Header --- */
+.header {
+  background-color: #030303;
+  text-align: center;
+  padding: 0.7rem 1rem;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  font-weight: 700;
+  font-size: 1.2rem;
+  border: 0.1px solid #dddddd;
+  letter-spacing: 1px;
+}
+.an{display: inline-block;justify-content:center;}
+
+.text {
+  justify-content: center;
+  font-weight: 400;
+    font-size: 1rem;
+    letter-spacing: 0px;
+    font-family: "Winky Rough", sans-serif;;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    animation: typing 4s steps(21);
+}
+@keyframes typing
+{
+    from {width:0}
+}
+
+/* ================================================================
+   UPGRADED SECTION: HEADER BUTTONS (Clear & History)
+   ================================================================ 
+*/
+.header-buttons {
+  margin-top: 0.8rem;
+  display: flex;
+  justify-content: center;
+  gap: 20px; /* Adjusted gap for better spacing */
+}
+
+.header-buttons button {
+  background: rgba(255, 255, 255, 0.03); /* Subtle glass background */
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 30px; /* Professional Pill Shape */
+  color: rgba(255, 255, 255, 0.9);
+  padding: 0.5rem 1.8rem;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); /* Smooth spring transition */
+  backdrop-filter: blur(4px);
+}
+
+.header-buttons button:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: var(--accent-color);
+  color: white;
+  transform: translateY(-2px); /* Slight lift */
+  box-shadow: 0 4px 15px rgba(79, 107, 254, 0.3); /* Blue glow */
+}
+
+/* Make Clear Chat button distinct on hover */
+#clearChat:hover {
+  border-color: #ff4757;
+  box-shadow: 0 4px 15px rgba(255, 71, 87, 0.3); /* Red glow */
+}
+
+@media (max-width: 780px) {
+  .header-buttons { gap: 2rem; }
+}
+@media (max-width: 700px) {
+  .header-buttons { gap: 1rem; }
+}
+
+/* --- Chat Content --- */
+.content {
+  flex: 1;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+  gap: 0.75rem;
+  scroll-behavior: smooth;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.content::-webkit-scrollbar {
+  display: none;
+}
+
+/* --- Message Bubbles --- */
+.answer-section {
+  max-width: 100%;
+  padding: 0.7rem 1rem;
+  border-radius: 10px;
+  color: #121212;
+  word-wrap: break-word;
+  line-height: 1.5;
+  font-size: 0.95rem;
+  background: var(--light-primary-color);
+  color: rgb(248, 248, 248);
+  align-self: flex-start;
+  border: 1px solid rgba(255,255,255,0.15);
+}
+
+.question-section {
+  background: linear-gradient(135deg, #4d65dc, #2d53cf);
+  align-self: flex-end;
+  box-shadow: 0 2px 10px rgba(79,107,254,0.4);
+   max-width: 75%;
+  padding: 0.7rem 1rem;
+  border-radius: 10px;
+  word-wrap: break-word;
+  line-height: 1.5;
+  font-size: 0.9rem;
+}
+
+/* --- Chat Form --- */
+.chat-form {
+  display: flex;
+  gap: 0.8rem;
+  padding: 1rem;
+  border-top: 1px solid #dddddd;
+  position: relative;
+  background: rgba(0,0,0,0.3);
+  backdrop-filter: blur(0px);
+  border-bottom: 0.2px solid #dddddd;
+}
+
+.chat-input {
+  flex: 1;
+  border-radius: 10px;
+  border: none;
+  padding: 0.8rem;
+  outline: none;
+  font-family: inherit;
+}
+
+.send-button {
+  background: linear-gradient(135deg, #5067dd, #2747af);
+  border: none;
+  border-radius: 50%;
+  width: 45px;
+  height: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.send-button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 10px rgba(69, 97, 236, 0.5);
+}
+
+/* ================================================================
+   UPGRADED SECTION: HISTORY & CLEAR HISTORY BUTTON
+   ================================================================ 
+*/
+.history {
+  /* New Professional Glass Container */
+  background: rgba(18, 18, 22, 0.95); /* Deep dark background */
+  backdrop-filter: blur(20px);
+  position: relative;
+  margin: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 1rem 1.2rem;
+  border-radius: 16px; /* Smoother corners */
+  color: white;
+  max-height: 220px;
+  overflow-y: auto;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.4); /* Deep shadow for depth */
+  animation: slideDown 0.4s ease-out; /* Smooth entrance */
+  
+  /* Hide scrollbars */
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.history::-webkit-scrollbar { display: none; }
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.history h4 {
+  margin-bottom: 0.8rem;
+  font-weight: 700;
+  font-size: 0.85rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.5); /* Muted title */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 0.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.history ul {
+  list-style: none;
+  padding-left: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.history ul li {
+  padding: 0.6rem 1rem;
+  margin: 0;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.03); /* Subtle item bg */
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  color: #ddd;
+  transition: all 0.25s ease;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.history ul li:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: white;
+  transform: translateX(4px); /* Professional slide effect */
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+/* Professional Clear History Button */
+#clearHistory {
+  /* Positioned to align with the Title H4 */
+  float: right;
+  margin-top: -46px; 
+  
+  /* Styling */
+  width: auto;
+  background: transparent;
+  border: 1px solid rgba(255, 71, 87, 0.5); /* Red Outline */
+  color: #ff6b6b;
+  padding: 0.3rem 1rem;
+  font-size: 0.75rem;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: none;
+}
+
+#clearHistory:hover {
+  background: rgba(255, 71, 87, 0.1);
+  border-color: #ff4757;
+  color: #ff4757;
+  box-shadow: 0 0 10px rgba(255, 71, 87, 0.2);
+  transform: translateY(-1px);
+}
+
+footer {
+   width: 100%;
+   font-size: 0.8rem;
+   margin-top: 10px;
+  background-color: rgba(0, 0, 0, 0.75);
+  color: rgb(205, 205, 205);
+  display: flex;
+  justify-content: center;
+ text-align: center;
+  align-items: center;
+  height: 10vh;
+  margin-bottom: 0px;
+}
+
+/* ---- AI Reply Action Bar ---- */
+.ai-action-bar {
+  margin-top: 10px;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  padding-left: 16px;
+}
+
+.ai-btn {
+  background: #e6e6e6;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: 0.25s ease-in-out;
+  user-select: none;
+}
+
+.ai-btn:hover {
+  background: #d1d1d1;
+}
+
+/* Icon animation when speaking */
+.speaking {
+  animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); opacity: 1;}
+  50% { transform: scale(1.15); opacity: 0.6;}
+  100% { transform: scale(1); opacity: 1;}
+}
+
+/* Copy success animation */
+.copied {
+  background: #4CAF50 !important;
+  color: white !important;
+}
