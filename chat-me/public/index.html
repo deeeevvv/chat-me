@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Chat Me 2.0: Ask anything</title>
     <link rel="stylesheet" href="style.css">
     <meta name="theme-color" content="#1f1f1f">
@@ -25,14 +25,19 @@
             background: radial-gradient(circle at center, #1a1a1a 0%, #000000 100%);
         }
 
+        /* FIX 2: Strengthened Layout Centering */
         .login-container {
-            position: relative;
+            position: absolute; /* Changed to absolute to sit perfectly on top */
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
             z-index: 10;
-            height: 100%;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
+            overflow: hidden; /* Prevents scrollbars */
         }
 
         /* =========================================
@@ -42,7 +47,7 @@
             to { opacity: 1; transform: translateX(0); }
         }
         @keyframes mobileSlideDown {
-            to { opacity: 1; top: 30px; } /* Slightly lower for better visibility */
+            to { opacity: 1; top: 30px; } 
         }
         @keyframes tabletSlideDown {
             to { opacity: 1; top: 50px; } 
@@ -53,7 +58,6 @@
 
         /* =========================================
            1. DESKTOP BRANDING (>1024px)
-           Clean Text, Top-Left
            ========================================= */
         .branding-desktop {
             display: block;
@@ -94,24 +98,21 @@
 
         /* =========================================
            2. TABLET BRANDING (769px - 1024px)
-           Glass Box, Top-Left -- UPDATED SIZE: BIGGER
            ========================================= */
         .branding-tablet {
             display: none; 
             position: fixed;
-            left: 50px; /* More margin */
+            left: 50px; 
             top: -100px; 
             z-index: 100;
 
-            /* Glassmorphism */
             background: rgba(35, 30, 30, 0.1);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             border: 0.1px solid rgba(167, 167, 167, 0.37);
             box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
-            border-radius: 16px; /* Rounder corners */
+            border-radius: 16px; 
             
-            /* INCREASED SIZE & PADDING */
             padding: 20px 35px;
             text-align: left;
             
@@ -121,7 +122,7 @@
 
         .branding-tablet h1 {
             margin: 0;
-            font-size: 2.4rem; /* Increased from 1.8rem */
+            font-size: 2.4rem; 
             font-weight: 800;
             color: #fff;
             letter-spacing: -0.5px;
@@ -129,7 +130,7 @@
 
         .branding-tablet p {
             margin: 4px 0 0 0;
-            font-size: 0.95rem; /* Increased from 0.75rem */
+            font-size: 0.95rem; 
             color: #a5f3fc;
             text-transform: uppercase;
             letter-spacing: 2px;
@@ -139,7 +140,6 @@
 
         /* =========================================
            3. MOBILE BRANDING (<768px)
-           Glass Box, Top-Center -- UPDATED SIZE: BIGGER
            ========================================= */
         .branding-mobile {
             display: none; 
@@ -149,7 +149,6 @@
             top: -100px; 
             z-index: 100;
             
-            /* Glassmorphism */
             background: rgba(35, 30, 30, 0.1);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
@@ -157,10 +156,9 @@
             border-radius: 14px;
              border: 0.1px solid rgba(167, 167, 167, 0.37);
             
-            /* INCREASED SIZE & PADDING */
             padding: 15px 30px;
             text-align: center;
-            width: max-content; /* Ensure box fits content */
+            width: max-content; 
             max-width: 90%;
             
             opacity: 0;
@@ -169,7 +167,7 @@
 
         .branding-mobile h1 {
             margin: 0;
-            font-size: 1.8rem; /* Increased from 1.5rem */
+            font-size: 1.8rem; 
             font-weight: 800;
             color: #fff;
             letter-spacing: -0.5px;
@@ -177,7 +175,7 @@
 
         .branding-mobile p {
             margin: 4px 0 0 0;
-            font-size: 0.75rem; /* Increased slightly */
+            font-size: 0.75rem; 
             color: #a5f3fc;
             text-transform: uppercase;
             letter-spacing: 1.5px;
@@ -189,14 +187,12 @@
            MEDIA QUERY LOGIC
            ========================================= */
         
-        /* TABLET RANGE (769px to 1024px) */
         @media screen and (max-width: 1024px) {
             .branding-desktop { display: none !important; }
             .branding-tablet  { display: block !important; }
             .branding-mobile  { display: none !important; }
         }
 
-        /* MOBILE RANGE (Below 768px) */
         @media screen and (max-width: 768px) {
             .branding-desktop { display: none !important; }
             .branding-tablet  { display: none !important; }

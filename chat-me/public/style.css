@@ -92,6 +92,7 @@ body.login-body {
   align-items: center;
 }
 
+/* --- FIXED GLASS CLASS --- */
 .glass {
   background: rgba(18, 18, 23, 0.3);
   backdrop-filter: blur(15px);
@@ -101,6 +102,12 @@ body.login-body {
   box-shadow: 0 8px 25px rgba(0,0,0,0.3);
   color: white;
   text-align: center;
+  
+  /* Constraints to prevent zooming */
+  width: 90%;
+  max-width: 400px;
+  box-sizing: border-box; 
+  margin: 0 auto; /* Ensure centering */
 }
 
 .glass h2 {
@@ -158,4 +165,21 @@ body.login-body {
   border-radius: 10px;
   text-align: center;
   outline: none;
+}
+
+/* --- NEW MOBILE FIXES --- */
+@media screen and (max-width: 480px) {
+    .glass {
+        padding: 2rem 1.5rem; /* Less padding on small screens */
+        width: 85%; /* Slightly more margin on sides */
+    }
+
+    .glass h2 {
+        font-size: 1.4rem; 
+    }
+    
+    .login-btn {
+        font-size: 0.9rem;
+        padding: 0.7rem 1rem;
+    }
 }

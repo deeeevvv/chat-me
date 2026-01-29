@@ -145,7 +145,6 @@
     </footer1>
   </main>
 </body>
-<footer>@2025 Chat Me. All rights reserved</footer>
 
 <script>
     document.addEventListener("DOMContentLoaded", () => {
@@ -196,7 +195,7 @@
             if (pendingAction === 'chat') {
                 // VISUAL CLEAR ONLY. 
                 // If you use chat.js to save chats, you might need to add your clear logic here.
-                document.getElementById('content').innerHTML = '<section class="answer-section">Chat cleared.</section>';
+                document.getElementById('content').innerHTML = '<section class="answer-section">Hi there! 🙋‍♂️ I’m Chat Me — your friendly AI assistant. Let’s get started with your thoughts! 😊</section>';
             } else if (pendingAction === 'history') {
                 // VISUAL CLEAR ONLY.
                 document.getElementById('historyList').innerHTML = '';
@@ -206,9 +205,6 @@
 
         // 4. Cancel Logic
         cancelBtn.addEventListener('click', closeWarning);
-
-        // NOTE: I removed the "toggleHistory" logic from here.
-        // It will now rely entirely on your existing 'chat.js' to open/close the history panel.
     });
 </script>
 </html>

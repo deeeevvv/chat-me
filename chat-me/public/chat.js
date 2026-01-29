@@ -1,5 +1,5 @@
 // public/chat.js
-// client-side chat logic (TTS + Copy + Clean Readout + Proper Table Handling + Modal Logic)
+// client-side chat logic (TTS + Copy + Clean Readout + Proper Table Handling + Modal Logic + Code Formatting)
 
 // === Fetch user and show welcome + logo ===
 async function getUser() {
@@ -329,32 +329,45 @@ function addAnswerSection(message) {
   }
 }
 
-// --- Formatter (Markdown, tables, math, colors) ---
+// --- Formatter (Markdown, tables, math, colors, CODE FIX) ---
 function formatResponse(text) {
   if (!text) return "";
 
+  // 1. Sanitize common Markdown artifacts
   text = text
     .replace(/^#{1,6}\s*/gm, "")
     .replace(/^[-*_]{3,}$/gm, "")
     .replace(/\n{2,}/g, "\n");
 
-  // Remove markdown text before table
   text = text.replace(/markdown''/gi, "");
 
-  // Math
+  // 2. Math Processing
   text = text
     .replace(/\$\$([\s\S]+?)\$\$/g, '<div class="math-block">\\($1\\)</div>')
     .replace(/\$([^$]+)\$/g, '<span class="math-inline">\\($1\\)</span>')
     .replace(/\\\((.*?)\\\)/g, '<span class="math-inline">\\($1\\)</span>')
     .replace(/\\\[(.*?)\\\]/gs, '<div class="math-block">\\($1\\)</div>');
 
-  // Bold, italics, inline code
+  // 3. Code Blocks (Fix for proper display)
+  // Handle triple backticks ```language code ```
+  text = text.replace(/```(\w*)\n?([\s\S]*?)```/g, (match, lang, code) => {
+    // Escape HTML special characters inside code blocks to prevent rendering
+    const escapedCode = code
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;");
+    const languageLabel = lang ? lang : 'Code';
+    return `<pre class="code-block"><div class="code-header">${languageLabel}</div><code>${escapedCode}</code></pre>`;
+  });
+
+  // 4. Inline formatting (Bold, Italic, Inline Code)
   text = text
     .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
     .replace(/\*(.*?)\*/g, "<em>$1</em>")
-    .replace(/`([^`]+)`/g, "<code>$1</code>");
+    // Use :not(pre code) logic in CSS or simple replacement here (since blocks are now <pre>)
+    .replace(/`([^`]+)`/g, "<code class='inline-code'>$1</code>");
 
-  // Tables
+  // 5. Tables
   if (/\|.*\|/.test(text)) {
     text = text.replace(/((?:\|.*\|\n?)+)/g, (match) => {
       const rows = match.trim().split("\n");
@@ -369,8 +382,11 @@ function formatResponse(text) {
     });
   }
 
-  // Line breaks
-  text = text.replace(/(?<!<\/tr>)\n/g, "<br>");
+  // 6. Line breaks (excluding those inside pre/table)
+  // We use a negative lookbehind/lookahead approximation or strict replacement.
+  // Since we already processed code/tables into HTML, we replace remaining newlines.
+  // A simple way is to split by HTML tags, but for simplicity here:
+  text = text.replace(/\n/g, "<br>");
 
   return `<div class="ai-reply fade-in">${text}</div>`;
 }
@@ -384,7 +400,47 @@ style.textContent = `
 .fade-in { animation: fadeIn 0.5s ease-in-out; }
 @keyframes fadeIn { from{opacity:0;transform:translateY(10px);} to{opacity:1;transform:translateY(0);} }
 
-.ai-reply code { background: rgba(255,255,255,0.15); padding: 2px 5px; border-radius:4px; font-family: monospace; }
+/* --- Code Styling Fix --- */
+.inline-code {
+  background: rgba(255,255,255,0.15);
+  padding: 2px 5px;
+  border-radius: 4px;
+  font-family: monospace;
+  color: #e2e8f0;
+}
+
+pre.code-block {
+  background: #1e1e1e; /* Dark background for code block */
+  border-radius: 8px;
+  margin: 12px 0;
+  border: 1px solid rgba(255,255,255,0.1);
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.code-header {
+  background: rgba(255,255,255,0.08);
+  padding: 6px 12px;
+  font-size: 0.75rem;
+  color: #a0aec0;
+  text-transform: uppercase;
+  font-family: sans-serif;
+  letter-spacing: 0.5px;
+  text-align: right;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+pre.code-block code {
+  display: block;
+  padding: 12px 15px;
+  overflow-x: auto;
+  color: #d4d4d4;
+  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+  font-size: 0.9rem;
+  white-space: pre-wrap; /* Keeps formatting but wraps long lines */
+  line-height: 1.5;
+}
+
 .ai-reply strong { color: #4F6BFE; font-weight:600; }
 .ai-reply em { color: #4fc3d0ff; }
 .math-inline { font-family: "Cambria Math","DejaVu Math TeX Gyre",serif; color: #d21010ff; }
@@ -400,33 +456,33 @@ style.textContent = `
   background: rgba(255,255,255,0.03);
   overflow-x: auto;
   overflow-y: auto;
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
-  word-break: break-word;  /* force long words to wrap */
-  white-space: normal;      /* allow wrapping inside cells */
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  word-break: break-word;
+  white-space: normal;
 }
-.table-wrapper::-webkit-scrollbar { display: none; } /* Chrome, Safari, Opera */
+.table-wrapper::-webkit-scrollbar { display: none; }
 
 .markdown-table {
   border-collapse: collapse;
   width: max-content;
   min-width: 100%;
-  table-layout: auto;   /* let cells grow naturally but allow wrapping */
-  word-wrap: break-word; /* older fallback */
+  table-layout: auto;
+  word-wrap: break-word;
 }
 .markdown-table td {
   border:1px solid rgba(255, 255, 255, 0.68);
   padding:6px 8px;
-  max-width: 250px;       /* prevent single cells from stretching too far */
-  word-break: break-word; /* wrap long strings */
-  white-space: normal;    /* allow multiline content */
+  max-width: 250px;
+  word-break: break-word;
+  white-space: normal;
 }
 .markdown-table tr:nth-child(even) { background: rgba(255,255,255,0.05); }
 `;
 document.head.appendChild(style);
 // --- Loading SVG & Scroll ---
 function getLoadingSvg() {
-  return `<svg style="height:25px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  return `<svg style="height:25px" xmlns="[http://www.w3.org/2000/svg](http://www.w3.org/2000/svg)" viewBox="0 0 200 200">
     <circle fill="#4F6BFE" stroke="#4F6BFE" stroke-width="15" r="15" cx="40" cy="100">
       <animate attributeName="cy" values="100;80;100" dur="0.6s" repeatCount="indefinite" begin="0s"/>
     </circle>
