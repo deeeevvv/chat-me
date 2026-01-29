@@ -146,7 +146,7 @@ app.post("/api/chat", async (req, res) => {
     const response = await axios.post(
       "https://openrouter.ai/api/v1/chat/completions",
       {
-        model: "arcee-ai/trinity-mini:free",
+        model: "google/gemma-3n-e4b-it:free",
         messages: [{ role: "user", content: question }],
       },
       {
